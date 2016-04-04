@@ -23,7 +23,7 @@ class ESLint(NodeLinter):
     syntax = ('javascript', 'html', 'javascriptnext', 'javascript (babel)',
               'javascript (jsx)', 'jsx-real', 'Vue Component', 'vue')
     npm_name = 'eslint'
-    cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '__RELATIVE_TO_FOLDER__')
+    cmd = ('eslint', '--format', 'compact', '--stdin', '--stdin-filename', '__RELATIVE_TO_FOLDER__', '__CONFIG_OVERRIDE__')
     version_args = '--version'
     version_re = r'v(?P<version>\d+\.\d+\.\d+)'
     version_requirement = '>= 1.0.0'
@@ -79,6 +79,25 @@ class ESLint(NodeLinter):
 
     def communicate(self, cmd, code=None):
         """Run an external executable using stdin to pass code and return its output."""
+        view_settings = self.get_view_settings()
+        if '__CONFIG_OVERRIDE__' in cmd:
+            i = cmd.index('__CONFIG_OVERRIDE__')
+            relfilename = self.filename
+            if 'config_map' in view_settings:
+                config_map = view_settings['config_map']
+                match = None
+                for key in config_map:
+                    extra_args = config_map[key]
+                    file_regex = re.compile(key)
+                    if file_regex.match(relfilename):
+                        match = extra_args
+                        break
+                if match:
+                    cmd[i:i+1] = extra_args
+                else:
+                    cmd.pop(i)
+            else:
+                cmd.pop(i)
 
         if '__RELATIVE_TO_FOLDER__' in cmd:
 
