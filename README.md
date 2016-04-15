@@ -6,6 +6,30 @@ This linter plugin for [SublimeLinter][docs] provides an interface to [ESLint](h
 ## Installation
 SublimeLinter 3 must be installed in order to use this plugin. If SublimeLinter 3 is not installed, please follow the instructions [here][installation].
 
+## Fork Details
+Only works with this [fork of sublime linter](https://github.com/trashhalo/SublimeLinter3). Adds the ability to define extra arguments to eslint if the file path matches a regex. Example
+```
+ "eslint": {
+     "@disable": false,
+     "args": [],
+     "config_map": {
+         ".*\\.es6$": [
+             "-c",
+         "config/eslint/eslint.json.es6"
+         ],
+         ".*\\.js$": [
+             "-c",
+         "config/eslint/eslint.json"
+         ],
+         ".*e2e.*": [
+             "-c",
+         "config/eslint/eslint.json.e2e"
+         ]
+     },
+     "excludes": []
+ }
+```
+
 ### Linter installation
 Before using this plugin, you must ensure that `eslint` is installed on your system. To install `eslint`, do the following:
 

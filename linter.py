@@ -43,6 +43,9 @@ class ESLint(NodeLinter):
         'vue': 'source.js.embedded.html'
     }
 
+    def get_chdir(self, settings):
+        return os.path.dirname(self.manifest_path)
+
     def find_errors(self, output):
         """
         Parse errors from linter's output.
